@@ -14,14 +14,14 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'category',
-        'image',
         'stock_quantity',
         'is_active',
+        'image',
+        'category_id',
     ];
 
-    public function getImageUrlAttribute()
+    public function category()
     {
-        return $this->image ? Storage::disk('public')->url('products/' . $this->image) : null;
+        return $this->belongsTo(Category::class);
     }
 }

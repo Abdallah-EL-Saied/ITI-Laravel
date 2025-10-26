@@ -5,65 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Product Dashboard')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-    </style>
 </head>
 
-<body>
+<body class="bg-gray-100">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('products.index') }}">
-                <i class="bi bi-box-seam me-2"></i>Product Dashboard
+    <nav class="bg-gray-900 text-white shadow-lg">
+        <div class="container mx-auto flex flex-wrap items-center justify-between py-4 px-6">
+            <a href="{{ route('products.index') }}" class="flex items-center text-xl font-bold uppercase gap-2">
+                <i class="bi bi-box-seam"></i>Products Dashboard
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+
+            <button id="nav-toggle" class="block lg:hidden text-white">
+                <i class="bi bi-list text-2xl"></i>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('products.index') }}"><i
-                                class="bi bi-grid me-1"></i>Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('products.create') }}"><i
-                                class="bi bi-plus-circle me-1"></i>Add</a>
-                    </li>
-                </ul>
+            <div class="hidden w-full lg:flex lg:items-center lg:w-auto gap-4" id="nav-content">
+                <a class="text-white font-medium hover:text-gray-300" href="{{ route('products.index') }}">Products</a>
+                <a class="text-white font-medium hover:text-gray-300"
+                    href="{{ route('categories.index') }}">Categories</a>
+                <a class="text-white font-medium hover:text-gray-300" href="{{ route('products.index') }}">Login</a>
             </div>
         </div>
     </nav>
 
     <!-- Page Content -->
-    <div class="container py-4">
+    <div class="container mx-auto py-10 px-4">
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="flex items-center bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+                role="alert">
+                <i class="bi bi-check-circle-fill text-xl mr-2"></i>
+                <span class="block">{{ session('success') }}</span>
+                <button type="button" class="absolute top-2 right-2 text-green-700 hover:text-green-900"
+                    onclick="this.parentElement.remove()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
         @endif
 
         @yield('content')
     </div>
 
-    <footer class="text-center py-3 border-top mt-5 text-muted small">
-        &copy; {{ date('Y') }} Product Dashboard | Built with Bootstrap 5
+    <!-- Footer -->
+    <footer class="text-center py-6 mt-10 border-t text-gray-500">
+        &copy; {{ date('Y') }} Products Dashboard | Abdallah_EL_Saied
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple mobile nav toggle
+        const navToggle = document.getElementById('nav-toggle');
+        const navContent = document.getElementById('nav-content');
+        navToggle.addEventListener('click', () => {
+            navContent.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
 
 </html>
