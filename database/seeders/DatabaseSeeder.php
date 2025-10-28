@@ -4,25 +4,27 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Category;
-use App\Models\Product;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Create main user with password 123456789
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Abdallah Elsaied',
+            'email' => 'abdallahalsabaa.pu.2021@gmail.com',
+            'password' => Hash::make('123456789'), // hashed password
         ]);
 
-        $this->call(CategorySeeder::class);
 
-        $categories = Category::all();
+        // Other random users
+        User::factory(5)->create();
 
-        Product::factory()->count(30)->make()->each(function ($product) use ($categories) {
-            $product->category_id = $categories->random()->id;
-            $product->save();
-        });
+        // Seed categories and products
+        $this->call([
+            CategorySeeder::class,
+            ProductSeeder::class,
+        ]);
     }
 }

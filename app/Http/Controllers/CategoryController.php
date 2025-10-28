@@ -2,78 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $userId = auth()->id();
+        $query = Category::where('user_id', $userId);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $categories = $query->latest()->paginate(10);
         return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
-        Category::create($request->all());
-        return redirect()->route('categories.index')->with('success', 'Category created successfully');
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('categories', 'public');
+            $validated['image'] = basename($path);
+        }
+
+        Category::create($validated);
+
+        return redirect()->route('categories.index')
+            ->with('success', 'Category created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Category $category)
     {
-        //
+        if ($category->user_id !== auth()->id())
+            abort(403);
+        $category->load('products');
+        return view('categories.show', compact('category'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Category $category)
     {
+        if ($category->user_id !== auth()->id())
+            abort(403);
         return view('categories.edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
-        $category->update($request->all());
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
+        if ($request->hasFile('image')) {
+            if ($category->image && Storage::exists('public/categories/' . $category->image)) {
+                Storage::delete('public/categories/' . $category->image);
+            }
+            $path = $request->file('image')->store('categories', 'public');
+            $validated['image'] = basename($path);
+        }
+
+        $category->update($validated);
+
+        return redirect()->route('categories.index')
+            ->with('success', 'Category updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category)
     {
+        if ($category->image && Storage::exists('public/categories/' . $category->image)) {
+            Storage::delete('public/categories/' . $category->image);
+        }
+
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
+
+        return redirect()->route('categories.index')
+            ->with('success', 'Category deleted successfully!');
     }
 }

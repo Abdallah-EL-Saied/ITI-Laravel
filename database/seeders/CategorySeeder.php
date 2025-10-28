@@ -4,22 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Category;
+use App\Models\User;
 
 class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = [
-            ['name' => 'Electronics', 'description' => 'Electronic gadgets and devices'],
-            ['name' => 'Clothing', 'description' => 'Men and women clothing'],
-            ['name' => 'Books', 'description' => 'Books and literature'],
-            ['name' => 'Home & Garden', 'description' => 'Furniture and home products'],
-            ['name' => 'Sports', 'description' => 'Sporting goods and equipment'],
-            ['name' => 'Toys', 'description' => 'Toys for kids'],
-        ];
+        $users = User::all();
 
-        foreach ($categories as $cat) {
-            Category::create($cat);
+        foreach ($users as $user) {
+            Category::factory()->count(5)->create([
+                'user_id' => $user->id,
+            ]);
         }
     }
 }

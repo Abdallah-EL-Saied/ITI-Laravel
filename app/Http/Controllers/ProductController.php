@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -11,7 +13,8 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category');
+        $userId = auth()->user()->id;
+        $query = Product::with('category')->where('user_id', $userId);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -24,30 +27,22 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-
     public function create()
     {
         $categories = Category::all();
         return view('products.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'stock_quantity' => 'nullable|integer|min:0',
-            'is_active' => 'nullable|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
             $validated['image'] = basename($path);
         }
+
+        $validated['user_id'] = auth()->id();
 
         Product::create($validated);
 
@@ -56,32 +51,29 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        if ($product->user_id !== auth()->id())
+            abort(403);
         return view('products.show', compact('product'));
     }
 
     public function edit(Product $product)
     {
-        $categories = Category::all();
+        if ($product->user_id !== auth()->id())
+            abort(403);
+        $categories = Category::where('user_id', auth()->id())->get();
         return view('products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'stock_quantity' => 'nullable|integer|min:0',
-            'is_active' => 'nullable|boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
+            // delete old image if exists
             if ($product->image && Storage::exists('public/products/' . $product->image)) {
                 Storage::delete('public/products/' . $product->image);
             }
+
             $path = $request->file('image')->store('products', 'public');
             $validated['image'] = basename($path);
         }
