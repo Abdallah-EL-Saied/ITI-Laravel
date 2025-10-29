@@ -30,12 +30,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Trashed Products
     Route::get('/products/trashed', [ProductController::class, 'trashed'])
-        ->middleware('role:manager,admin')
+        ->middleware('role:admin,manager')
         ->name('products.trashed');
 
     // Restore Product
     Route::post('/products/{id}/restore', [ProductController::class, 'restore'])
-        ->middleware('role:manager,admin')
+        ->middleware('role:admin,manager')
         ->name('products.restore');
 
     // Force Delete Product
@@ -54,12 +54,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Trashed Categories
     Route::get('/categories/trashed', [CategoryController::class, 'trashed'])
-        ->middleware('role:manager,admin')
+        ->middleware('role:admin,manager')
         ->name('categories.trashed');
 
     // Restore Category
     Route::post('/categories/{id}/restore', [CategoryController::class, 'restore'])
-        ->middleware('role:manager,admin')
+        ->middleware('role:admin,manager')
         ->name('categories.restore');
 
     // Force Delete Category

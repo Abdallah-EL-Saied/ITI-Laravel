@@ -79,6 +79,7 @@ class ProductController extends BaseController
     {
         $this->authorize('update', $product);
 
+
         $validated = $request->validated();
         if ($request->hasFile('image')) {
             if ($product->image && Storage::exists('public/products/' . $product->image)) {
@@ -88,6 +89,7 @@ class ProductController extends BaseController
             $validated['image'] = basename($path);
         }
 
+        // dd($request);
         $product->update($validated);
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
@@ -103,7 +105,7 @@ class ProductController extends BaseController
     {
         $query = Product::onlyTrashed()->latest();
 
-        if (auth()->user()->role === 'manager') {
+        if (auth()->user()->role === 'manager' || auth()->user()->role === 'admin') {
             $query->where('user_id', auth()->id());
         }
 

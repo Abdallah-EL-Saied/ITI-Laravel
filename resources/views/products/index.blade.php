@@ -1,5 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @session('error')
+            {{ session('error') }}
+        @endsession
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">All Products</h3>
 

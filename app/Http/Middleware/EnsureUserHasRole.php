@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class EnsureUserHasRole
 {
-    public function handle(Request $request, Closure $next, string $roles)
+    public function __invoke(Request $request, Closure $next, ...$roles)
     {
-        $rolesArray = array_map('strtolower', explode(',', $roles));
+        $user = $request->user();
 
-        $userRole = strtolower($request->user()->role);
-
-        if (!in_array($userRole, $rolesArray)) {
-            abort(403, 'Unauthorized action.');
+        if (!$user || !in_array($user->role, $roles)) {
+            abort(403, 'You are not authorized to access this page.');
         }
 
         return $next($request);

@@ -1,6 +1,29 @@
 <x-app-layout>
     <x-slot name="header">
         <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Product</h3>
+        <!-- Static Success Alert -->
+        <div role="status" aria-live="polite"
+            class="max-w-xl mx-auto p-4 rounded-2xl bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 shadow-sm">
+            <div class="flex items-start gap-3">
+                <!-- Icon -->
+                <svg class="w-6 h-6 shrink-0 text-green-600 dark:text-green-300" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 10-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                </svg>
+
+                <div class="flex-1">
+                    <p class="font-semibold text-green-800 dark:text-green-200">@session('error')
+                        {{ session('error') }}
+                    @endsession
+                    </p>
+                    <p class="mt-1 text-sm text-green-700 dark:text-green-100">Your operation completed successfully.
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </x-slot>
 
     <div class="py-6">
