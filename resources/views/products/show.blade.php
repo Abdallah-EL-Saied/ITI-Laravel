@@ -6,12 +6,11 @@
     <div class="py-6">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
 
-            <a href="{{ route('products.index') }}"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 gap-2 mb-6">
-                <i class="bi bi-arrow-left"></i> Back to Products
-            </a>
+            <x-button href="{{ route('products.index') }}" icon="bi bi-arrow-left" type="secondary">
+                Back to Products
+            </x-button>
 
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden md:flex md:gap-0">
+            <div class="mt-4 bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden md:flex md:gap-0">
                 <!-- Image Section -->
                 <div class="md:w-5/12">
                     @if($product->image)
@@ -77,17 +76,17 @@
                     </div>
 
                     <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700 flex-wrap">
-                        <a href="{{ route('products.edit', $product->id) }}"
-                            class="flex-1 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex justify-center items-center gap-2">
-                            <i class="bi bi-pencil"></i> Edit Product
-                        </a>
-                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="flex-1">
-                            @csrf @method('DELETE')
-                            <button type="submit"
-                                class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex justify-center items-center gap-2"
-                                onclick="return confirm('Are you sure you want to delete this product?')">
-                                <i class="bi bi-trash"></i> Delete Product
-                            </button>
+                        <x-button href="{{ route('products.edit', $product->id) }}" icon="bi bi-pencil" type="warning">
+                            Edit
+                        </x-button>
+
+                        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                            onsubmit="return confirm('Delete this product?');">
+                            @csrf
+                            @method('DELETE')
+                            <x-button type="danger" icon="bi bi-trash" :submit="true">
+                                Delete
+                            </x-button>
                         </form>
                     </div>
 

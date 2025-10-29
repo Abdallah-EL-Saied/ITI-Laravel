@@ -74,14 +74,13 @@
                 </div>
 
                 <div class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                    <a href="{{ route('products.index') }}"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="bi bi-arrow-left"></i> Back
-                    </a>
-                    <button type="submit"
-                        class="px-6 py-2 bg-green-500 text-white rounded-lg flex items-center gap-2 hover:bg-green-600">
-                        <i class="bi bi-check-circle"></i> Create Product
-                    </button>
+                    <x-button href="{{ route('products.index') }}" icon="bi bi-arrow-left" type="secondary">
+                        Back
+                    </x-button>
+
+                    <x-button type="success" icon="bi bi-check-circle" :submit="true">
+                        Create Product
+                    </x-button>
                 </div>
 
             </form>

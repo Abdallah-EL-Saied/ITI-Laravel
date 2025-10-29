@@ -83,20 +83,19 @@
                     <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Leave empty to keep current image</p>
                 </div>
 
-                <div class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                    <a href="{{ route('products.index') }}"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="bi bi-arrow-left"></i> Back
-                    </a>
+                <div class="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <x-button href="{{ route('products.index') }}" icon="bi bi-arrow-left" type="secondary">
+                        Back
+                    </x-button>
+
                     <div class="flex gap-2">
-                        <a href="{{ route('products.show', $product->id) }}"
-                            class="px-4 py-2 border border-blue-500 text-blue-500 rounded-lg flex items-center gap-2 hover:bg-blue-50">
-                            <i class="bi bi-eye"></i> View
-                        </a>
-                        <button type="submit"
-                            class="px-6 py-2 bg-yellow-500 text-white rounded-lg flex items-center gap-2 hover:bg-yellow-600">
-                            <i class="bi bi-check-circle"></i> Update
-                        </button>
+                        <x-button href="{{ route('products.show', $product->id) }}" icon="bi bi-eye" type="secondary">
+                            View
+                        </x-button>
+
+                        <x-button type="warning" icon="bi bi-check-circle" :submit="true">
+                            Update
+                        </x-button>
                     </div>
                 </div>
 

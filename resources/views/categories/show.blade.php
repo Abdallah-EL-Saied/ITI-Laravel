@@ -1,23 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $category->name }}</h3>
+        <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $category->name }}</h3>
+            <x-button href="{{ route('categories.index') }}" icon="bi bi-arrow-left" type="secondary">Back</x-button>
+        </div>
     </x-slot>
 
-    <div class="sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-6">
-            <a href="{{ route('categories.index') }}"
-                class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">Back
-                to Categories</a>
-            <a href="{{ route('categories.edit', $category->id) }}"
-                class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center gap-2">Edit
-                Category</a>
-        </div>
-
+    <div class="sm:px-6 lg:px-8 mt-6">
         <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
             <p><strong>Name:</strong> {{ $category->name }}</p>
             <p><strong>Description:</strong> {{ $category->description ?: '-' }}</p>
-            <p><strong>Status:</strong> <span
-                    class="px-2 py-1 rounded-lg {{ $category->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">{{ $category->is_active ? 'Active' : 'Inactive' }}</span>
+            <p><strong>Status:</strong>
+                <span
+                    class="px-2 py-1 rounded-lg text-white text-sm {{ $category->is_active ? 'bg-green-500' : 'bg-red-500' }}">
+                    {{ $category->is_active ? 'Active' : 'Inactive' }}
+                </span>
             </p>
             @if($category->image)
                 <div class="mt-4">
@@ -28,7 +25,6 @@
         </div>
 
         <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Products in this Category</h4>
-
         @if($category->products->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($category->products as $product)
@@ -44,9 +40,9 @@
                         <div class="p-4">
                             <h5 class="font-semibold text-gray-900 dark:text-gray-100">{{ $product->name }}</h5>
                             <p class="text-gray-700 dark:text-gray-300">${{ number_format($product->price, 2) }}</p>
-                            <a href="{{ route('products.show', $product->id) }}"
-                                class="mt-2 inline-block px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">View
-                                Product</a>
+                            <x-button href="{{ route('products.show', $product->id) }}" icon="bi bi-eye" type="info">
+                                View Product
+                            </x-button>
                         </div>
                     </div>
                 @endforeach
